@@ -34,7 +34,7 @@ namespace WinDevices {
 
     public class Device {
         //Instance of object
-        private ManagementBaseObject device;
+        //private ManagementBaseObject device;
 
         public string FriendlyName { get; private set; }
         
@@ -69,7 +69,7 @@ namespace WinDevices {
         internal Device(ManagementBaseObject device, RegistryKey usbKey)
         {
             //save device, just in case
-            this.device = device;
+            //this.device = device;
 
             //extract properties
             this.Availability = (UInt16)device.GetPropertyValue("Availability");

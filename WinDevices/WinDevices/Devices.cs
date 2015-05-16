@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Management;
 using Microsoft.Win32;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinDevices
 {
@@ -59,6 +52,15 @@ namespace WinDevices
         }
 
         /// <summary>
+        /// Gets a list of all devices connected
+        /// </summary>
+        /// <returns>Returns a list</returns>
+        public List<Device> GetDevices()
+        {
+            return deviceslList;
+        }
+
+        /// <summary>
         /// Checks if a devices friendly name is currently connected
         /// </summary>
         /// <param name="name">FriendlyName of a device</param>
@@ -73,7 +75,7 @@ namespace WinDevices
         /// </summary>
         /// <param name="DeviceID">DeviceID of a device</param>
         /// <returns>boolean indicating if the device is connected</returns>
-        public bool IsDeviceIdConnected(string DeviceID)
+        public bool IsDeviceIDConnected(string DeviceID)
         {
             return deviceslList.Exists(x => x.DeviceID == DeviceID);
         }
