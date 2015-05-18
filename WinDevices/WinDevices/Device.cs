@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Management;
 using System.Text;
@@ -72,33 +73,75 @@ namespace WinDevices {
             //this.device = device;
 
             //extract properties
-            this.Availability = (UInt16)device.GetPropertyValue("Availability");
-            
-            this.Caption = (string)device.GetPropertyValue("Caption");
-            this.ClassGuid = (string)device.GetPropertyValue("ClassGuid");
-            this.CreationClassName = (string)device.GetPropertyValue("CreationClassName");
-            this.ConfigManagerErrorCode = (UInt32)device.GetPropertyValue("ConfigManagerErrorCode");
+            this.Availability = (device.GetPropertyValue("Availability") == null)
+                ? (UInt16) AccessibilityStatus.NA
+                : (UInt16) device.GetPropertyValue("Availability");
 
-            this.Description = (string)device.GetPropertyValue("Description");
-            this.DeviceID = (string)device.GetPropertyValue("DeviceID");
-            
-            this.ErrorCleared = (bool)device.GetPropertyValue("ErrorCleared");
-            this.ErrorDescription = (string)device.GetPropertyValue("ErrorDescription");
-            
-            this.LastErrorCode = (UInt32)device.GetPropertyValue("LastErrorCode");
-            this.Manufacturer = (string)device.GetPropertyValue("Manufacturer");
-            this.Name = (string)device.GetPropertyValue("Name");
-            
-            this.PNPClass = (string)device.GetPropertyValue("PNPClass");
-            this.PNPDeviceID = (string)device.GetPropertyValue("PNPDeviceID");
-            this.PowerManagementSupported = (bool)device.GetPropertyValue("PowerManagementSupported");
-            this.Present = (bool)device.GetPropertyValue("Present");
+            this.Caption = (device.GetPropertyValue("Caption") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("Caption");
+            this.ClassGuid = (device.GetPropertyValue("ClassGuid") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("ClassGuid");
+            this.CreationClassName = (device.GetPropertyValue("CreationClassName") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("CreationClassName");
+            this.ConfigManagerErrorCode = (device.GetPropertyValue("ConfigManagerErrorCode") == null)
+                ? (UInt32)ConfigManagerErrorCodes.DEVICE_NOT_PRESENT
+                : (UInt32)device.GetPropertyValue("ConfigManagerErrorCode");
 
-            this.Service = (string)device.GetPropertyValue("Service");
-            this.Status = (string)device.GetPropertyValue("Status");
-            this.StatusInfo = (UInt16)device.GetPropertyValue("StatusInfo");
-            this.SystemCreationClassName = (string)device.GetPropertyValue("SystemCreationClassName");
-            this.SystemName = (string)device.GetPropertyValue("SystemName");
+            this.Description = (device.GetPropertyValue("Description") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("Description");
+            this.DeviceID = (device.GetPropertyValue("DeviceID") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("DeviceID");
+
+            this.ErrorCleared = (device.GetPropertyValue("ErrorCleared") == null) 
+                ? false 
+                : (bool)device.GetPropertyValue("ErrorCleared");
+            this.ErrorDescription = (device.GetPropertyValue("ErrorDescription") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("ErrorDescription");
+
+            this.LastErrorCode = (device.GetPropertyValue("LastErrorCode") == null) 
+                ? 0
+                : (UInt32)device.GetPropertyValue("LastErrorCode");
+            this.Manufacturer = (device.GetPropertyValue("Manufacturer") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("Manufacturer");
+            this.Name = (device.GetPropertyValue("Name") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("Name");
+
+            /*this.PNPClass = (device.GetPropertyValue("PNPClass") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("PNPClass");*/
+            this.PNPDeviceID = (device.GetPropertyValue("PNPDeviceID") == null) 
+                ? "" 
+                : (string)device.GetPropertyValue("PNPDeviceID");
+            this.PowerManagementSupported = (device.GetPropertyValue("PowerManagementSupported") == null) 
+                ? false 
+                : (bool)device.GetPropertyValue("PowerManagementSupported");
+            /*this.Present = (device.GetPropertyValue("Present") == null) 
+                ? false 
+                : (bool)device.GetPropertyValue("Present");*/
+
+            this.Service = (device.GetPropertyValue("Service") == null) 
+                ? ""
+                : (string)device.GetPropertyValue("Service");
+            this.Status = (device.GetPropertyValue("Status") == null) 
+                ? ""
+                : (string)device.GetPropertyValue("Status");
+            this.StatusInfo = (device.GetPropertyValue("StatusInfo") == null)
+                ? (UInt16)StatusInfoValue.OTHER
+                : (UInt16)device.GetPropertyValue("StatusInfo");
+            this.SystemCreationClassName = (device.GetPropertyValue("SystemCreationClassName") == null) 
+                ? ""
+                : (string)device.GetPropertyValue("SystemCreationClassName");
+            this.SystemName = (device.GetPropertyValue("SystemName") == null) 
+                ? ""
+                : (string)device.GetPropertyValue("SystemName");
 
             FindFriendlyName(usbKey);
         }

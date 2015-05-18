@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices.ComTypes;
 using WinDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,6 +57,12 @@ namespace Test {
         public void GetDevicesShouldNotBeEmpty() {
             Devices devs = new Devices();
             List<Device> dev = devs.GetDevices();
+            
+            foreach (var d in dev)
+            {
+                Debug.WriteLine("Friendly Name: " + d.FriendlyName + " Name: " + d.Name + " id: " + d.DeviceID + " mfg: " + d.Manufacturer);
+            }
+
             Assert.AreNotEqual(dev.Count, 0);
         }
 
