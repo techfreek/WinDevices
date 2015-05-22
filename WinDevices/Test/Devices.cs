@@ -97,7 +97,8 @@ namespace Test {
         [TestMethod]
         public void DeviceNameConnected_True() {
             Devices devs = new Devices();
-            Assert.IsTrue(devs.IsDeviceNameConnected("lenovo"));
+            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
+            Assert.IsTrue(devs.IsDeviceNameConnected("@oem42.inf,%rtsuvc.FriendlyName%;Lenovo EasyCamera"));
         }
 
         [TestMethod]
@@ -127,8 +128,8 @@ namespace Test {
         [TestMethod]
         public void DeviceIDConnected_True() {
             Devices devs = new Devices();
-            ///TODO: Lookup actual device id
-            Assert.IsTrue(devs.IsDeviceIDConnected("lenovo"));
+            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
+            Assert.IsTrue(devs.IsDeviceIDConnected(@"USB\VID_174F&PID_1474&MI_00\6&277F3CFF&0&0000"));
         }
 
         [TestMethod]
@@ -162,7 +163,8 @@ namespace Test {
         [TestMethod]
         public void GetDeviceName_True() {
             Devices devs = new Devices();
-            Assert.IsNotNull(devs.GetDeviceByName("lenovo"));
+            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
+            Assert.IsNotNull(devs.GetDeviceByName("@oem42.inf,%rtsuvc.FriendlyName%;Lenovo EasyCamera"));
         }
 
         [TestMethod]
@@ -192,8 +194,8 @@ namespace Test {
         [TestMethod]
         public void GetDeviceID_True() {
             Devices devs = new Devices();
-            ///TODO: Lookup actual device id
-            Assert.IsNotNull(devs.GetDeviceByID("lenovo"));
+            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
+            Assert.IsNotNull(devs.GetDeviceByID(@"USB\VID_174F&PID_1474&MI_00\6&277F3CFF&0&0000"));
         }
 
         [TestMethod]

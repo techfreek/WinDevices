@@ -72,7 +72,7 @@ namespace WinDevices
             if(exact) {
                 connected = deviceslList.Exists(x => x.FriendlyName == name);
             } else {
-                connected = deviceslList.Exists(x => x.FriendlyName.ToLower().Contains(name));
+                connected = deviceslList.Exists(x => x.FriendlyName != null && x.FriendlyName.ToLower().Contains(name));
             }
             return connected;
         }
@@ -97,10 +97,10 @@ namespace WinDevices
         {
             Device dev;
             
-            giif(exact) {
+            if(exact) {
                 dev = deviceslList.Find(x => x.FriendlyName == name);
             } else {
-                dev = deviceslList.Find(x => x.FriendlyName.ToLower().Contains(name));
+                dev = deviceslList.Find(x => x.FriendlyName != null &&  x.FriendlyName.ToLower().Contains(name));
             }
 
             return dev;
