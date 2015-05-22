@@ -64,10 +64,17 @@ namespace WinDevices
         /// Checks if a devices friendly name is currently connected
         /// </summary>
         /// <param name="name">FriendlyName of a device</param>
+        /// <param name="exact">Indicates if the search should be exact. Default true.</param>
         /// <returns>boolean indicating if the device is connected</returns>
-        public bool IsDeviceNameConnected(string name)
+        public bool IsDeviceNameConnected(string name, bool exact = true)
         {
-            return deviceslList.Exists(x => x.FriendlyName == name);
+            bool connected = false;
+            if(exact) {
+                connected = deviceslList.Exists(x => x.FriendlyName == name);
+            } else {
+                connected = deviceslList.Exists(x => x.FriendlyName.ToLower().Contains(name));
+            }
+            return connected;
         }
 
         /// <summary>
@@ -84,11 +91,18 @@ namespace WinDevices
         /// Attempts to get the device associated with the FriendlyName.
         /// </summary>
         /// <param name="name">FriendlyName of device</param>
+        /// <param name="exact">Indicates if the search should be exact. Default true.</param>
         /// <returns>Instance of Device which provides more information</returns>
-        public Device GetDeviceByName(string name)
+        public Device GetDeviceByName(string name, bool exact = true)
         {
             Device dev;
-            dev = deviceslList.Find(x => x.FriendlyName == name);
+            
+            giif(exact) {
+                dev = deviceslList.Find(x => x.FriendlyName == name);
+            } else {
+                dev = deviceslList.Find(x => x.FriendlyName.ToLower().Contains(name));
+            }
+
             return dev;
         }
 

@@ -82,9 +82,28 @@ namespace Test {
         }
 
         [TestMethod]
+        public void DeviceNameConnected_NotExact_Crash()
+        {
+            Devices devs = new Devices();
+            try {
+                devs.IsDeviceNameConnected("e", false);
+            } 
+            catch (Exception e)
+            {
+                Assert.Fail("IsDeviceNameConnected_NotExact should not crash: " + e.ToString());
+            }
+        }
+
+        [TestMethod]
         public void DeviceNameConnected_True() {
             Devices devs = new Devices();
             Assert.IsTrue(devs.IsDeviceNameConnected("lenovo"));
+        }
+
+        [TestMethod]
+        public void DeviceNameConnected_NotExact_True() {
+            Devices devs = new Devices();
+            Assert.IsTrue(devs.IsDeviceNameConnected("e", false));
         }
 
         [TestMethod]
@@ -126,7 +145,17 @@ namespace Test {
             try {
                 devs.GetDeviceByName("test");
             } catch (Exception e) {
-                Assert.Fail("IsDeviceNameConnected should not crash: " + e.ToString());
+                Assert.Fail("GetDeviceNameConnected should not crash: " + e.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void GetDeviceName_NotExact_Crash() {
+            Devices devs = new Devices();
+            try {
+                devs.GetDeviceByName("e", false);
+            } catch (Exception e) {
+                Assert.Fail("GetDeviceNameConnected_NotExact should not crash: " + e.ToString());
             }
         }
 
@@ -134,6 +163,12 @@ namespace Test {
         public void GetDeviceName_True() {
             Devices devs = new Devices();
             Assert.IsNotNull(devs.GetDeviceByName("lenovo"));
+        }
+
+        [TestMethod]
+        public void GetDeviceName_NotExact_True() {
+            Devices devs = new Devices();
+            Assert.IsNotNull(devs.GetDeviceByName("e", false));
         }
 
         [TestMethod]
