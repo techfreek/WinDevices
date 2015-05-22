@@ -95,7 +95,7 @@ namespace WinDevices
         /// <returns>Instance of Device which provides more information</returns>
         public Device GetDeviceByName(string name, bool exact = true)
         {
-            Device dev;
+            Device dev = null;
             
             if(exact) {
                 dev = deviceslList.Find(x => x.FriendlyName == name);
