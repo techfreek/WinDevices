@@ -23,12 +23,11 @@ namespace WinDevices {
         FIRMWARE_NOT_REPORT_RESX, DEVICE_CANT_START, DEVICE_FAILED, NEED_MORE_RESOURCES, 
         WINDOWS_CANT_VERIFY_RESOURCES, PC_NEEDS_RESTART, DEVICE_NOT_WORKING_BAD_ENUM, 
         CANT_IDENTIFY_REQUESTED_RESX, WANTS_UNKOWN_RESOURCE, RESINTALL_DRIVERS, VD_LOADER_FAILURE, 
-        POSSIBLE_REGISTRY_CORRUPTION, SYSTEM_FAILURE_REMOVING_DEV DEVICE_DISABLED, SYSTEM_FAILURE, 
+        POSSIBLE_REGISTRY_CORRUPTION, SYSTEM_FAILURE_REMOVING_DEV, DEVICE_DISABLED, SYSTEM_FAILURE, 
         DEVICE_NOT_PRESENT, SETTING_UP_DEVICE, STILL_SETTING_UP_DEVICE, DEVICE_LACKS_LOG_CONFIG, 
         MISSING_DEVICE_DRIVER, FIRMWARE_DIDNT_PROVIDE_RESX, IRQ_ALREADY_IN_USE, 
         DEVICE_NOTWORKING_PROPERLY
     };
-
 
     //StatusInfo Return Values
     public enum StatusInfoValue {
@@ -68,6 +67,23 @@ namespace WinDevices {
         public UInt16 StatusInfo { get; private set; }
         public string SystemCreationClassName { get; private set; }
         public string SystemName { get; private set; }
+
+        public enum DeviceProperties {
+            FRIENDLY_NAME, AVAILABILITY, CAPTION, CLASSGUID, CREATION_CLASS_NAME,
+            CONFIG_MANAGER_ERROR_CODE, DESCRIPTION, DEVICE_ID, ERROR_CLEARED, 
+            ERROR_DESCRIPTION, LAST_ERROR_CODE, MANUFACTURER, NAME, PNP_CLASS, PNP_DEVICE_ID,
+            POWER_MANAGEMENT_SUPPORTED, PRESENT, SERVICE, STATUS, STATUS_INFO, SYSTEM_CREATION_CLASS_NAME,
+            SYSTEM_NAME
+        };
+
+        internal static string[] DevicePropertyNames = new string[]
+        {
+            "FriendlyName", "Availability", "Caption", "ClassGuid", "CreationClassName", 
+            "ConfigManagerErrorCode", "Description", "DeviceID", "ErrorCleared", 
+            "ErrorDescription", "LastErrorCode", "Manufacturer", "Name", "PNPClass", "PNPDeviceID", 
+            "PowerManagementSupported", "Present", "Service", "Status", "StatusInfo", "SystemCreationClassName", 
+            "SystemName"
+        };
         
         internal Device(ManagementBaseObject device, RegistryKey usbKey)
         {

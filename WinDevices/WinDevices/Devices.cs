@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Management;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Win32;
 
 namespace WinDevices
@@ -116,6 +117,37 @@ namespace WinDevices
             Device dev;
             dev = deviceslList.Find(x => x.DeviceID == DeviceID);
             return dev;
+        }
+
+        /// <summary>
+        /// Allows selecting the field from a string
+        /// </summary>
+        /// <param name="field">string of the fieldname</param>
+        /// <param name="value">Value you want to match. Only precise matches work.</param>
+        /// <returns>First matching device or null</returns>
+        public Device GetDeviceByField(string field, object value)
+        {
+            Device dev;
+            dev = deviceslList.Find(x => x.GetType().GetProperty(field) != null && 
+                                    x.GetType().GetProperty(field).Equals(value));
+            return dev;
+        }
+
+        /// <summary>
+        /// Allows selecting the field from an enum in Device.DeviceProperties
+        /// </summary>
+        /// <param name="field">Enum from Device.DeviceProperties</param>
+        /// <param name="value">Value you want to match. Only precise matches work.</param>
+        /// <returns>First matching device or null</returns>
+        public Device GetDeviceByField(int field, object value)
+        {
+            string _field;
+            if (field >= 0 && field < Device.DevicePropertyNames.Length)
+            {
+                _field = Device.DevicePropertyNames[field];
+                return GetDeviceByField(_field, value);
+            }
+            return null;
         }
     }
 }
