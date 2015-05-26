@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using WinDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test {
     [TestClass]
     public class TestDevices {
+        internal static string[] DevicePropertyNames = new string[]
+        {
+            "FriendlyName", "Availability", "Caption", "ClassGuid", "CreationClassName", 
+            "ConfigManagerErrorCode", "Description", "DeviceID", "ErrorCleared", 
+            "ErrorDescription", "LastErrorCode", "Manufacturer", "Name", "PNPClass", "PNPDeviceID", 
+            "PowerManagementSupported", "Present", "Service", "Status", "StatusInfo", "SystemCreationClassName", 
+            "SystemName"
+        };
+
         //------------------------------------------------------------------------------
         [TestCategory("Constructor")]
         [TestMethod]
@@ -202,6 +211,42 @@ namespace Test {
         public void GetDeviceID_False() {
             Devices devs = new Devices();
             Assert.IsNull(devs.GetDeviceByID("This is a failing test"));
+        }
+
+        [TestCategory("GetDeviceByField_String")]
+        [TestMethod]
+        public void GetDeviceByField_String_Crash() {
+            Devices devs = new Devices();
+            Random rand = new Random();
+            int i = rand.Next(DevicePropertyNames.Length);
+            try
+            {
+
+                devs.GetDeviceByField(DevicePropertyNames[i], "i");
+            } catch (Exception e) {
+                Assert.Fail("GetFieldByField should not crash: " + e.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void GetDeviceByField_Int_Crash() {
+            Devices devs = new Devices();
+            Random rand = new Random();
+            int i = rand.Next(DevicePropertyNames.Length);
+            try {
+                devs.GetDeviceByField(i, "i");
+            } catch (Exception e) {
+                Assert.Fail("GetFieldByField should not crash: " + e.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void GetDeviceByField_Int_Success() {
+            Devices devs = new Devices();
+            Random rand = new Random();
+            string devID = TestHelpers.RandomDeviceID();
+            Assert.IsNotNull(devs.GetDeviceByField((int)Device.DeviceProperties.DEVICE_ID, devID));
+
         }
     }
 }

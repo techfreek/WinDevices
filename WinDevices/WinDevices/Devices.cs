@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Management;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Win32;
 
 namespace WinDevices
