@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Security.Cryptography;
 using WinDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test {
     [TestClass]
     public class TestDevices {
-        internal static string[] DevicePropertyNames = new string[]
-        {
-            "FriendlyName", "Availability", "Caption", "ClassGuid", "CreationClassName", 
-            "ConfigManagerErrorCode", "Description", "DeviceID", "ErrorCleared", 
-            "ErrorDescription", "LastErrorCode", "Manufacturer", "Name", "PNPClass", "PNPDeviceID", 
-            "PowerManagementSupported", "Present", "Service", "Status", "StatusInfo", "SystemCreationClassName", 
-            "SystemName"
-        };
-
         //------------------------------------------------------------------------------
         [TestCategory("Constructor")]
         [TestMethod]
@@ -106,8 +96,7 @@ namespace Test {
         [TestMethod]
         public void DeviceNameConnected_True() {
             Devices devs = new Devices();
-            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
-            Assert.IsTrue(devs.IsDeviceNameConnected("@oem42.inf,%rtsuvc.FriendlyName%;Lenovo EasyCamera"));
+            Assert.IsTrue(devs.IsDeviceNameConnected(TestHelpers.RandomFriendlyName()));
         }
 
         [TestMethod]
@@ -138,7 +127,7 @@ namespace Test {
         public void DeviceIDConnected_True() {
             Devices devs = new Devices();
             //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
-            Assert.IsTrue(devs.IsDeviceIDConnected(@"USB\VID_174F&PID_1474&MI_00\6&277F3CFF&0&0000"));
+            Assert.IsTrue(devs.IsDeviceIDConnected(TestHelpers.RandomDeviceID()));
         }
 
         [TestMethod]
@@ -172,8 +161,7 @@ namespace Test {
         [TestMethod]
         public void GetDeviceName_True() {
             Devices devs = new Devices();
-            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
-            Assert.IsNotNull(devs.GetDeviceByName("@oem42.inf,%rtsuvc.FriendlyName%;Lenovo EasyCamera"));
+            Assert.IsNotNull(devs.GetDeviceByName(TestHelpers.RandomFriendlyName()));
         }
 
         [TestMethod]
@@ -203,8 +191,7 @@ namespace Test {
         [TestMethod]
         public void GetDeviceID_True() {
             Devices devs = new Devices();
-            //Sorry for this. This is the webcam on my windows laptop. If I find a better test case, I'll replace this
-            Assert.IsNotNull(devs.GetDeviceByID(@"USB\VID_174F&PID_1474&MI_00\6&277F3CFF&0&0000"));
+            Assert.IsNotNull(devs.GetDeviceByID(TestHelpers.RandomDeviceID()));
         }
 
         [TestMethod]
@@ -218,11 +205,11 @@ namespace Test {
         public void GetDeviceByField_String_Crash() {
             Devices devs = new Devices();
             Random rand = new Random();
-            int i = rand.Next(DevicePropertyNames.Length);
+            int i = rand.Next(TestHelpers.DevicePropertyNames.Length);
             try
             {
 
-                devs.GetDeviceByField(DevicePropertyNames[i], "i");
+                devs.GetDeviceByField(TestHelpers.DevicePropertyNames[i], "i");
             } catch (Exception e) {
                 Assert.Fail("GetFieldByField should not crash: " + e.ToString());
             }
@@ -232,7 +219,7 @@ namespace Test {
         public void GetDeviceByField_Int_Crash() {
             Devices devs = new Devices();
             Random rand = new Random();
-            int i = rand.Next(DevicePropertyNames.Length);
+            int i = rand.Next(TestHelpers.DevicePropertyNames.Length);
             try {
                 devs.GetDeviceByField(i, "i");
             } catch (Exception e) {
@@ -246,7 +233,21 @@ namespace Test {
             Random rand = new Random();
             string devID = TestHelpers.RandomDeviceID();
             Assert.IsNotNull(devs.GetDeviceByField((int)Device.DeviceProperties.DEVICE_ID, devID));
+        }
 
+        [TestMethod]
+        public void GetDeviceByField_Int_Fail() {
+            Devices devs = new Devices();
+            Random rand = new Random();
+            string devID = TestHelpers.RandomDeviceID();
+
+            //reverse the string
+            char[] arr = devID.ToCharArray();
+            Array.Reverse(arr);
+            devID = new string(arr);
+
+            Device dev = devs.GetDeviceByField((int) Device.DeviceProperties.DEVICE_ID, devID);
+            Assert.IsNull(dev);
         }
     }
 }

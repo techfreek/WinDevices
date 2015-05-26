@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Management;
+using System.Reflection;
 using Microsoft.Win32;
 
 namespace WinDevices
@@ -7,23 +10,11 @@ namespace WinDevices
     public class Devices
     {
         private List<Device> deviceslList;
-
-        private RegistryKey EnumKey;
-        private RegistryKey usbKey;
-
         /// <summary>
         /// Returns an instance which has a list of Plug and Play devices that can be queried
         /// </summary>
         public Devices()
         {
-            //navigate registry so we can find friendly names
-            EnumKey = Registry.LocalMachine
-                .OpenSubKey("SYSTEM")
-                .OpenSubKey("CurrentControlSet")
-                .OpenSubKey("Enum");
-            usbKey = EnumKey.OpenSubKey("USB");
-            
-
             // Find connected devices
             Discover();
         }
@@ -39,7 +30,7 @@ namespace WinDevices
             deviceslList = new List<Device>();
             //Add each device to the list
             foreach (var device in collection) {
-                deviceslList.Add(new Device(device, usbKey));
+                deviceslList.Add(new Device(device));
             }
         }
 
@@ -126,10 +117,33 @@ namespace WinDevices
         /// <returns>First matching device or null</returns>
         public Device GetDeviceByField(string field, object value)
         {
-            Device dev;
-            dev = deviceslList.Find(x => x.GetType().GetProperty(field) != null && 
-                                    x.GetType().GetProperty(field).Equals(value));
-            return dev;
+            int i = 0;
+            Device dev = null;
+            Type DeviceType = typeof(Device);
+
+            //Some reason, the name looks like this. Don't ask. I don't know why.
+            field = '<' + field + ">k__BackingField";
+
+            //find the field
+            FieldInfo fInfo = DeviceType.GetField(field, BindingFlags.Public |
+                                                        BindingFlags.Instance |
+                                                        BindingFlags.NonPublic);
+            if (fInfo == null) {
+                return null;
+            }
+
+            for(; i < deviceslList.Count;i++)
+            {
+                dev = deviceslList[i];
+                
+                Object devValue = fInfo.GetValue(dev);
+
+                if (value.Equals(devValue))
+                {
+                    return dev;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -147,6 +161,39 @@ namespace WinDevices
                 return GetDeviceByField(_field, value);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Checks to see if a device has a field value matching a supplied value and field
+        /// </summary>
+        /// <param name="field">string of the fieldname</param>
+        /// <param name="value">Value you want to match. Only precise matches work.</param>
+        /// <returns>Boolean indication if a device field is equivalent to the provided value</returns>
+        public bool IsDeviceConnectedByField(string field, object value) {
+            Device dev = null;
+
+            dev = GetDeviceByField(field, value);
+
+            if (dev == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Checks to see if a device has a field value matching a supplied value and field from an enum in Device.DeviceProperties
+        /// </summary>
+        /// <param name="field">Enum from Device.DeviceProperties</param>
+        /// <param name="value">Value you want to match. Only precise matches work.</param>
+        /// <returns>Boolean indication if a device field is equivalent to the provided value</returns>
+        public bool IsDeviceConnectedByField(int field, object value) {
+            string _field;
+            if (field >= 0 && field < Device.DevicePropertyNames.Length) {
+                _field = Device.DevicePropertyNames[field];
+                return IsDeviceConnectedByField(_field, value);
+            }
+            return false;
         }
     }
 }

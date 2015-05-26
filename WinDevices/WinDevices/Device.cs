@@ -32,6 +32,7 @@ namespace WinDevices {
     public class Device {
         //Instance of object
         //private ManagementBaseObject device;
+        private static RegistryKey USBKey = null;
 
         public string FriendlyName { get; private set; }
         
@@ -80,7 +81,7 @@ namespace WinDevices {
             "SystemName"
         };
         
-        internal Device(ManagementBaseObject device, RegistryKey usbKey)
+        internal Device(ManagementBaseObject device)
         {
             //save device, just in case
             //this.device = device;
@@ -156,19 +157,28 @@ namespace WinDevices {
                 ? ""
                 : (string)device.GetPropertyValue("SystemName");
 
-            FindFriendlyName(usbKey);
+            this.FriendlyName = FindFriendlyName(this.DeviceID);
         }
 
-        private void FindFriendlyName(RegistryKey usbKey)
+        public static string FindFriendlyName(string DeviceID)
         {
-            string id = this.DeviceID;
-            string[] parts = this.DeviceID.Split('\\');
+            if (USBKey == null)
+            {
+                //navigate registry so we can find friendly names
+                USBKey = Registry.LocalMachine
+                            .OpenSubKey("SYSTEM")
+                            .OpenSubKey("CurrentControlSet")
+                            .OpenSubKey("Enum")
+                            .OpenSubKey("USB");
+            }
+
+            string[] parts = DeviceID.Split('\\');
             //parts[0]: ignore
             //parts[1]: folder to check
             //parts[2]: subfolder/id
 
             //I should look up what these names actually mean
-            RegistryKey folder = usbKey.OpenSubKey(parts[1]);
+            RegistryKey folder = USBKey.OpenSubKey(parts[1]);
             RegistryKey subFolder;
 
             if (folder != null)
@@ -177,9 +187,11 @@ namespace WinDevices {
                 if (subFolder != null)
                 {
                     //Get name. If it does not exist, provide a default
-                    this.FriendlyName = (string)subFolder.GetValue("FriendlyName", "");
+                    return (string)subFolder.GetValue("FriendlyName", "");
                 }
             }
+
+            return "";
         }
     }
 }
